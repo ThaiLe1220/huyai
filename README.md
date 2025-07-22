@@ -1,67 +1,142 @@
-# Video Downloader with AI Description
+# Video Processor with AI Analysis
 
-A Python script that downloads videos from TikTok and Instagram, extracts the first frame, and generates AI-powered descriptions using OpenAI's GPT-4.
+A Python tool that downloads videos and analyzes them using Google AI Studio (Gemini). Provides comprehensive scene-by-scene analysis with timestamps, perfect for understanding video content structure.
 
 ## Features
 
-- Download videos from TikTok and Instagram URLs
-- Extract first frame as PNG image
-- Generate AI descriptions of video content
-- Process multiple links from a file
-- Save metadata in JSON format
+- Download videos from TikTok, Instagram, and other platforms using yt-dlp
+- Multi-scene AI analysis using Google Gemini 2.5 Pro
+- Frame-by-frame content analysis with timestamps
+- Support for single video or batch processing
+- Comprehensive metadata output in JSON format
+- Scene breakdown with visual elements, audio analysis, and engagement metrics
 
 ## Requirements
 
 - Python 3.7+
 - yt-dlp
-- ffmpeg
-- OpenAI API key
+- Google AI Studio API key
 
 ## Installation
 
 1. Install dependencies:
 ```bash
-pip install -r requirements.txt
+pip install google-genai python-dotenv
 ```
 
-2. Install system dependencies:
+2. Install yt-dlp:
 ```bash
-# macOS
-brew install ffmpeg
-
-# Ubuntu/Debian
-sudo apt install ffmpeg
+pip install yt-dlp
 ```
 
-3. Create `.env` file with your OpenAI API key:
+3. Create `.env` file with your Google AI Studio API key:
 ```
-OPENAI_API_KEY=your_api_key_here
+GEMINI_API_KEY=your_api_key_here
 ```
 
 ## Usage
 
-1. Add video URLs to `links.txt` (one per line)
-2. Run the script:
+### Process Single Video (Quick Test)
 ```bash
-python video_processor.py
+python video_processor.py --single-link "https://www.tiktok.com/@user/video/123456789"
+```
+
+### Process Multiple Videos from File
+1. Create `links.txt` with video URLs (one per line):
+```
+https://www.tiktok.com/@user1/video/123
+https://www.instagram.com/reel/abc123
+```
+
+2. Run batch processing:
+```bash
+python video_processor.py --links-file links.txt
+```
+
+### Command Line Options
+```bash
+python video_processor.py [options]
+
+Options:
+  -s, --single-link URL     Process a single video URL
+  -l, --links-file FILE     Process URLs from file (default: links.txt)
+  -o, --output-dir DIR      Output directory for videos (default: downloads)
+  -h, --help               Show help message
 ```
 
 ## Output
 
-- **Videos**: Downloaded to `downloads/` folder
-- **Frames**: Extracted to `frames/` folder  
-- **Metadata**: Saved to `metadata.json` with video info and AI descriptions
+### Video Files
+Downloaded to `downloads/` folder with original titles
 
-## Example
+### Metadata Files
+- **Single video**: `single_video_metadata.json`
+- **Batch processing**: `metadata.json`
 
+### Analysis Structure
+```json
+{
+  "video_summary": "Brief overview of the entire video",
+  "total_duration": "Video length in seconds",
+  "content_type": "dance, comedy, tutorial, etc.",
+  "overall_mood": "Emotional tone",
+  "scenes": [
+    {
+      "scene_number": 1,
+      "start_timestamp": "0:00",
+      "duration": "3.5s",
+      "description": "What's happening in this scene",
+      "text_overlay": "Visible text or captions",
+      "main_action": "Primary focus",
+      "visual_elements": "Colors, lighting, etc."
+    }
+  ],
+  "audio_elements": {
+    "music_type": "Background music description",
+    "voice_over": true,
+    "sound_effects": "Notable audio"
+  },
+  "visual_style": {
+    "camera_work": "Movement and style",
+    "setting": "Location/environment",
+    "production_quality": "Low/Medium/High"
+  },
+  "engagement_elements": ["hooks", "transitions"],
+  "suggested_tags": ["relevant", "keywords"],
+  "platform_indicators": "TikTok/Instagram watermarks"
+}
+```
+
+## Examples
+
+### Single Video Analysis
 ```bash
-# Add links to links.txt
-echo "https://www.instagram.com/reels/example/" >> links.txt
-echo "https://www.tiktok.com/@user/video/123456789" >> links.txt
+python video_processor.py -s "https://www.tiktok.com/@example/video/123"
+```
 
-# Process videos
+### Custom Output Directory
+```bash
+python video_processor.py -l my_links.txt -o custom_downloads
+```
+
+### Batch Processing
+```bash
+# Create links file
+cat > links.txt << EOF
+https://www.tiktok.com/@user1/video/123
+https://www.tiktok.com/@user2/video/456
+EOF
+
+# Process all videos
 python video_processor.py
 ```
+
+## Dependencies
+
+The script automatically checks for required dependencies:
+- `yt-dlp` for video downloading
+- `google-genai` for AI analysis
+- `python-dotenv` for environment variables
 
 ## License
 

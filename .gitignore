@@ -111,10 +111,17 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Downloaded videos and frames (keep structure but ignore content)
+# Downloaded videos and analysis outputs
 downloads/
 frames/
 metadata.json
+single_video_metadata.json
+
+# Video files
+*.mp4
+*.mkv
+*.webm
+*.avi
 
 # macOS
 .DS_Store
@@ -136,3 +143,4 @@ Desktop.ini
 # Temporary files
 *.tmp
 *.temp
+links.txt
