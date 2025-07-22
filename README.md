@@ -1,9 +1,10 @@
-# Video Processor with AI Analysis
+# HuyAI - Video Analysis & TikTok Channel Discovery
 
-A Python tool that downloads videos and analyzes them using Google AI Studio (Gemini). Provides comprehensive scene-by-scene analysis with timestamps, perfect for understanding video content structure.
+A Python toolkit for downloading videos, analyzing content with AI, and discovering TikTok pet channels. Combines video processing with Google Gemini 2.5 Pro and channel research with OpenAI GPT-4.
 
-## Features
+## Tools
 
+### 1. Video Processor (`video_processor.py`)
 - Download videos from TikTok, Instagram, and other platforms using yt-dlp
 - Multi-scene AI analysis using Google Gemini 2.5 Pro
 - Frame-by-frame content analysis with timestamps
@@ -11,49 +12,50 @@ A Python tool that downloads videos and analyzes them using Google AI Studio (Ge
 - Comprehensive metadata output in JSON format
 - Scene breakdown with visual elements, audio analysis, and engagement metrics
 
+### 2. TikTok Channel Finder (`tiktok_channel_finder.py`)
+- Find popular TikTok pet and animal channels using GPT-4
+- Keyword-based search with country targeting
+- CSV database with duplicate prevention
+- Track channel discovery history and metadata
+
 ## Requirements
 
 - Python 3.7+
 - yt-dlp
-- Google AI Studio API key
+- Google AI Studio API key (for video analysis)
+- OpenAI API key (for channel finding)
 
 ## Installation
 
 1. Install dependencies:
 ```bash
-pip install google-genai python-dotenv
+pip install -r requirements.txt
+pip install openai  # for channel finder
 ```
 
-2. Install yt-dlp:
-```bash
-pip install yt-dlp
+2. Create `.env` file with API keys:
 ```
-
-3. Create `.env` file with your Google AI Studio API key:
-```
-GEMINI_API_KEY=your_api_key_here
+GEMINI_API_KEY=your_gemini_key_here
+OPENAI_API_KEY=your_openai_key_here
 ```
 
 ## Usage
 
-### Process Single Video (Quick Test)
+### Video Processor
+
+#### Process Single Video
 ```bash
 python video_processor.py --single-link "https://www.tiktok.com/@user/video/123456789"
 ```
 
-### Process Multiple Videos from File
-1. Create `links.txt` with video URLs (one per line):
-```
-https://www.tiktok.com/@user1/video/123
-https://www.instagram.com/reel/abc123
-```
-
+#### Process Multiple Videos from File
+1. Create `links.txt` with video URLs (one per line)
 2. Run batch processing:
 ```bash
 python video_processor.py --links-file links.txt
 ```
 
-### Command Line Options
+#### Video Processor Options
 ```bash
 python video_processor.py [options]
 
@@ -64,16 +66,36 @@ Options:
   -h, --help               Show help message
 ```
 
+### TikTok Channel Finder
+
+#### Find Pet Channels
+```bash
+python tiktok_channel_finder.py --keywords "cats, funny pets" --target 30 --country US
+```
+
+#### Channel Finder Options
+```bash
+python tiktok_channel_finder.py [options]
+
+Options:
+  -k, --keywords TEXT       Search keywords (comma-separated)
+  -t, --target NUMBER       Number of channels to find (default: 20)
+  -c, --country COUNTRY     Country targeting: US, IN, ID, BD, VN (default: US)
+  -h, --help               Show help message
+```
+
 ## Output
 
-### Video Files
-Downloaded to `downloads/` folder with original titles
+### Video Processor Output
+- **Video Files**: Downloaded to `downloads/` folder with original titles
+- **Metadata Files**: 
+  - Single video: `single_video_metadata.json`
+  - Batch processing: `metadata.json`
 
-### Metadata Files
-- **Single video**: `single_video_metadata.json`
-- **Batch processing**: `metadata.json`
+### TikTok Channel Finder Output
+- **CSV Database**: `pet_channels.csv` with channel info and search history
 
-### Analysis Structure
+### Video Analysis Structure
 ```json
 {
   "video_summary": "Brief overview of the entire video",
@@ -109,35 +131,41 @@ Downloaded to `downloads/` folder with original titles
 
 ## Examples
 
-### Single Video Analysis
+### Video Processing Examples
 ```bash
+# Single video analysis
 python video_processor.py -s "https://www.tiktok.com/@example/video/123"
-```
 
-### Custom Output Directory
-```bash
+# Custom output directory
 python video_processor.py -l my_links.txt -o custom_downloads
+
+# Batch processing from links file
+python video_processor.py
 ```
 
-### Batch Processing
+### Channel Finding Examples
 ```bash
-# Create links file
-cat > links.txt << EOF
-https://www.tiktok.com/@user1/video/123
-https://www.tiktok.com/@user2/video/456
-EOF
+# Find dog channels
+python tiktok_channel_finder.py --keywords "dogs, puppies" --target 25
 
-# Process all videos
-python video_processor.py
+# Find channels in specific country
+python tiktok_channel_finder.py --keywords "pets" --country IN --target 50
+
+# General pet search
+python tiktok_channel_finder.py --keywords "animals, pets, cute" --target 100
 ```
 
 ## Dependencies
 
-The script automatically checks for required dependencies:
-- `yt-dlp` for video downloading
-- `google-genai` for AI analysis
-- `python-dotenv` for environment variables
+Both tools automatically check for required dependencies:
+- **Video Processor**: `yt-dlp`, `google-genai`, `python-dotenv`
+- **Channel Finder**: `openai`, `csv` (built-in)
 
-## License
+## Files
 
-MIT License
+- `video_processor.py` - Main video download and AI analysis tool
+- `tiktok_channel_finder.py` - TikTok channel discovery tool  
+- `requirements.txt` - Python dependencies
+- `pet_channels.csv` - Channel database (auto-generated)
+- `metadata.json` - Video analysis results (auto-generated)
+- `downloads/` - Downloaded video files (auto-generated)
