@@ -206,11 +206,19 @@ DO NOT include any text outside the JSON structure."""
             "content_type": "unknown",
             "overall_mood": "unknown",
             "scenes": [],
-            "audio_elements": {"music_type": "unknown", "voice_over": False, "sound_effects": "unknown"},
-            "visual_style": {"camera_work": "unknown", "setting": "unknown", "production_quality": "unknown"},
+            "audio_elements": {
+                "music_type": "unknown",
+                "voice_over": False,
+                "sound_effects": "unknown",
+            },
+            "visual_style": {
+                "camera_work": "unknown",
+                "setting": "unknown",
+                "production_quality": "unknown",
+            },
             "engagement_elements": [],
             "suggested_tags": [],
-            "platform_indicators": "unknown"
+            "platform_indicators": "unknown",
         }
 
 
@@ -227,16 +235,16 @@ def save_metadata(metadata_list: List[Dict], output_file: str = "metadata.json")
 def process_single_link(url: str, output_dir: str = "downloads"):
     """Process a single video link"""
     print(f"Processing single link: {url}")
-    
+
     # Download video
     download_result = download_video_with_ytdlp(url, output_dir)
-    
+
     if download_result["success"]:
         video_path = download_result["video_path"]
-        
+
         # Analyze video with Gemini
         video_analysis = analyze_video_with_gemini(video_path)
-        
+
         # Create metadata entry
         metadata = {
             "video_name": os.path.basename(video_path),
@@ -246,7 +254,7 @@ def process_single_link(url: str, output_dir: str = "downloads"):
             "duration": download_result.get("duration", 0),
             "analysis": video_analysis,
         }
-        
+
         # Save metadata for single video
         save_metadata([metadata], "single_video_metadata.json")
         print(f"\n✅ Single video processing complete!")
