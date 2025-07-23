@@ -9,7 +9,7 @@ client = OpenAI()
 
 
 def find_pet_channels(search_keywords="", target_count=20, country="US"):
-    """Find popular TikTok pet and animal channels with specific keywords and country"""
+    """Find popular TikTok pet and animal channels with specific keywords and country using web search"""
 
     # Build user prompt with keywords and target count
     base_prompt = f"Find popular TikTok channels that focus on pet and animal content. Find exactly {target_count} unique channels."
@@ -29,29 +29,49 @@ def find_pet_channels(search_keywords="", target_count=20, country="US"):
             + " Provide TikTok usernames only (@username format), one per line."
         )
 
-    response = client.chat.completions.create(
-        model="gpt-4.1",
-        messages=[
-            {
-                "role": "system",
-                "content": f"""You are a TikTok channel finder focused on pet and animal content creators. Your job is to find and list popular TikTok channels that focus on pets, animals, dogs, cats, and similar content.
+    # Updated system prompt to emphasize country-specific search
+    system_prompt = f"""You are a TikTok channel finder focused on pet and animal content creators from {country}. Your job is to find and list popular TikTok channels that focus on pets, animals, dogs, cats, and similar content, specifically targeting creators from {country}.
 
 REQUIREMENTS:
 - Only provide TikTok usernames in this format: @username
 - Focus on channels that primarily post pet/animal content
 - Find exactly {target_count} unique channels
-- Prefer popular/trending creators with high followers
+- Prefer popular/trending creators with high followers from {country}
 - Include variety: dogs, cats, exotic pets, pet training, funny pets, etc.
-- No explanations needed - just provide the usernames, one per line""",
+- Use web search to find current, active channels
+- No explanations needed - just provide the usernames, one per line"""
+
+    # Use the new responses.create API with web search
+    response = client.responses.create(
+        model="gpt-4.1",
+        input=[
+            {
+                "role": "system",
+                "content": [{"type": "input_text", "text": system_prompt}],
             },
-            {"role": "user", "content": user_prompt},
+            {"role": "user", "content": [{"type": "input_text", "text": user_prompt}]},
+        ],
+        text={"format": {"type": "text"}},
+        reasoning={},
+        tools=[
+            {
+                "type": "web_search_preview",
+                "user_location": {
+                    "type": "approximate",
+                    "country": country,
+                },
+                "search_context_size": "medium",
+            }
         ],
         temperature=1,
-        max_tokens=10000,
+        max_output_tokens=10000,
         top_p=1,
+        store=False,
     )
 
-    return response.choices[0].message.content
+    # Updated response parsing for the new API format
+    # The new API returns the content differently
+    return response.content[0].text
 
 
 def extract_usernames(response_text):

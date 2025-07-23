@@ -1,6 +1,6 @@
 # HuyAI - Video Analysis & TikTok Channel Discovery
 
-A Python toolkit for downloading videos, analyzing content with AI, and discovering TikTok pet channels. Combines video processing with Google Gemini 2.5 Pro and channel research with OpenAI GPT-4.
+A Python toolkit for downloading videos, analyzing content with AI, and discovering TikTok pet channels. Combines video processing with Google Gemini 2.5 Pro and channel research with OpenAI GPT-4.1
 
 ## Tools
 
@@ -13,7 +13,7 @@ A Python toolkit for downloading videos, analyzing content with AI, and discover
 - Scene breakdown with visual elements, audio analysis, and engagement metrics
 
 ### 2. TikTok Channel Finder (`tiktok_channel_finder.py`)
-- Find popular TikTok pet and animal channels using GPT-4
+- Find popular TikTok pet and animal channels using GPT-4.1
 - Keyword-based search with country targeting
 - CSV database with duplicate prevention
 - Track channel discovery history and metadata
