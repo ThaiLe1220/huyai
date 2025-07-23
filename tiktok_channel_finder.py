@@ -60,18 +60,29 @@ REQUIREMENTS:
                     "type": "approximate",
                     "country": country,
                 },
-                "search_context_size": "medium",
+                "search_context_size": "high",
             }
         ],
-        temperature=1,
-        max_output_tokens=10000,
+        temperature=0.7,
+        max_output_tokens=8192,
         top_p=1,
         store=False,
     )
 
-    # Updated response parsing for the new API format
-    # The new API returns the content differently
-    return response.content[0].text
+    # Debug: Let's see what the response object actually contains
+    print("🔍 DEBUG: Response object type:", type(response))
+    print("🔍 DEBUG: Response object attributes:", dir(response))
+    print("🔍 DEBUG: Response object:", response)
+
+    # Extract text from the response.output structure
+    try:
+        # Based on debug output: response.output[1].content[0].text
+        return response.output[1].content[0].text
+    except Exception as e:
+        print(f"❌ output[1].content[0].text failed: {e}")
+        # If all else fails, return the string representation
+        print("⚠️  WARNING: Using fallback - converting response to string")
+        return str(response)
 
 
 def extract_usernames(response_text):

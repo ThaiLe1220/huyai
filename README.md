@@ -70,7 +70,7 @@ Options:
 
 #### Find Pet Channels
 ```bash
-python tiktok_channel_finder.py -k "trending pets, viral animals" -c US
+python tiktok_channel_finder.py -k "trending pets, viral animals, 2025" -c US
 ```
 
 #### Channel Finder Options
