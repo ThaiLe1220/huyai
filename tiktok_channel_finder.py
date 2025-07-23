@@ -119,10 +119,22 @@ def load_existing_channels(csv_filename="pet_channels.csv"):
 
 def update_channel_data(existing_row, new_keywords, new_country):
     """Update existing channel with new keywords and country"""
-    # Combine keywords
+    # Combine keywords and remove duplicates
     existing_keywords = existing_row.get("keywords", "")
     if existing_keywords and new_keywords:
-        combined_keywords = f"{existing_keywords}, {new_keywords}"
+        # Split keywords, strip whitespace, and remove duplicates while preserving order
+        existing_list = [k.strip() for k in existing_keywords.split(",") if k.strip()]
+        new_list = [k.strip() for k in new_keywords.split(",") if k.strip()]
+        
+        # Combine and deduplicate while preserving order
+        seen = set()
+        combined_list = []
+        for keyword in existing_list + new_list:
+            if keyword.lower() not in seen:
+                combined_list.append(keyword)
+                seen.add(keyword.lower())
+        
+        combined_keywords = ", ".join(combined_list)
     else:
         combined_keywords = new_keywords or existing_keywords
 
